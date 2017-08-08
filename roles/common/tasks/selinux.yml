@@ -1,0 +1,13 @@
+---
+- name: check SELinux is installed
+  yum:
+    name:
+      - selinux-policy
+      - selinux-policy-targeted
+      - setools
+    state: present
+
+- name: enable SELinux (permissive while checking)
+  selinux:
+    policy: targeted
+    state: permissive

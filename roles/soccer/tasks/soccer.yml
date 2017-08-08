@@ -1,0 +1,17 @@
+---
+- name: create soccer platform container
+  docker_container:
+    name: soccer
+    hostname: soccer.robocupjunior.com.au
+    image: rcjaustralia/rcj-soccer-platform
+    restart_policy: always
+    ports:
+      - "9191:9191"
+    state: started
+
+- name: open soccer ports
+  firewalld:
+    immediate: yes
+    permanent: yes
+    port: 9191/tcp
+    state: enabled

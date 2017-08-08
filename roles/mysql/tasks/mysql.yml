@@ -1,0 +1,13 @@
+---
+- name: create MariaDB container
+  docker_container:
+    name: mariadb
+    image: centos/mariadb
+    restart_policy: always
+    ports:
+      - "3306:3306"
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ db_password }}"
+    volumes:
+      - "/srv/mariadb:/var/lib/mysql/data"
+    state: started

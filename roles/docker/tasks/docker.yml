@@ -1,0 +1,43 @@
+---
+- name: enable overlay
+  copy: src=overlay.conf dest=/etc/modules-load.d/overlay.conf
+
+- name: check if reboot required by host
+  shell: lsmod | grep -q "overlay"
+  ignore_errors: yes
+  failed_when: "'Permission denied' in overlay_check.stderr"
+  register: overlay_check
+
+- name: reboot host
+  command: sleep 1
+  notify:
+    - restart host
+  when: overlay_check.rc
+
+- name: add docker repo
+  yum_repository:
+    name: dockerrepo
+    description: Docker Engine
+    baseurl: https://yum.dockerproject.org/repo/main/centos/$releasever/
+    gpgkey: https://yum.dockerproject.org/gpg
+    gpgcheck: yes
+
+- name: add docker service override folder
+  file:
+    name: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: add docker service override
+  copy: src=docker-service.conf dest=/etc/systemd/system/docker.service.d/override.conf
+
+- name: install docker
+  yum:
+    name: docker-engine
+    state: present
+
+- name: start and enable docker
+  service: name=docker state=started enabled=yes
+
+- name: install docker-py
+  pip:
+    name: docker-py

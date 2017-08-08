@@ -1,0 +1,30 @@
+---
+- name: add IUS repository
+  yum:
+    name: 'https://centos7.iuscommunity.org/ius-release.rpm'
+    state: present
+  tags: yum, ius
+
+- name: install Python 3.6
+  yum:
+    name:
+      - python36u
+      - python36u-pip
+      - python36u-devel
+      - libffi
+      - libffi-devel
+    state: present
+  tags: yum, python36
+
+- name: download pip 2
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+
+- name: install pip 2
+  command: python /tmp/get-pip.py
+
+- name:
+  file:
+    path: /tmp/get-pip.py
+    state: absent

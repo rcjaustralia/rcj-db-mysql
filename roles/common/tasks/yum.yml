@@ -1,0 +1,17 @@
+---
+- name: update all core systems
+  yum:
+    name: '*'
+    state: latest
+  tags: yum, upgrade
+
+- name: install common tools
+  yum:
+    name:
+      - nano
+      - wget
+      - epel-release
+      - gcc
+      - net-tools
+    state: present
+  tags: yum

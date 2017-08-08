@@ -1,0 +1,11 @@
+---
+- name: restart docker
+  service: name=docker state=restarted
+
+- name: restart host
+  shell: shutdown -r +1 && sleep 1
+  async: 0
+  poll: 0
+  become: yes
+  become_method: sudo
+  ignore_errors: yes
