@@ -1,13 +1,21 @@
 ---
+- name: create MariaDB data folder
+  file:
+    path: /srv/mariadb
+    state: directory
+    mode: 0777
+    recurse: yes
+
 - name: create MariaDB container
   docker_container:
     name: mariadb
     image: centos/mariadb
+    pull: yes
     restart_policy: always
     ports:
       - "3306:3306"
     env:
       MYSQL_ROOT_PASSWORD: "{{ db_password }}"
     volumes:
-      - "/srv/mariadb:/var/lib/mysql/data"
+      - "/srv/mariadb:/var/lib/mysql:rw"
     state: started

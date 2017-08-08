@@ -1,17 +1,30 @@
 ---
 - name: create soccer platform container
   docker_container:
-    name: soccer
-    hostname: soccer.robocupjunior.com.au
+    name: rcj_soccer
+    hostname: soccer.rcja.org.au
     image: rcjaustralia/rcj-soccer-platform
     restart_policy: always
+    pull: yes
+    env:
+      RCJ_DATABASE_CONNECTION: "mysql+pymysql://{{ db_user }}:{{ db_password }}@mariadb/rcj_soccer"
+      RCJ_SMS_USERNAME: "{{ sms_user }}"
+      RCJ_SMS_PASSWORD: "{{ sms_pass }}"
+      RCJ_SMS_FROM: "{{ sms_from }}"
+      RCJ_SECRETS_KEY: "{{ secret_salt }}"
+      RCJ_DATABASE_MIGRATE: "yes"
+      RCJ_DATABASE_INIT0: "no"  # Remove the 0 to run
+    volumes:
+      - "/srv/migrations:/srv/migration_data:rw"
     ports:
-      - "9191:9191"
+      - "80:5000"
+    links:
+      - "mariadb:mariadb"
     state: started
 
 - name: open soccer ports
   firewalld:
     immediate: yes
     permanent: yes
-    port: 9191/tcp
+    port: 80/tcp
     state: enabled
