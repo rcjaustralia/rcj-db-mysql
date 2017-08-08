@@ -1,9 +1,6 @@
 ---
 - hosts: rcjweb
   vars_prompt:
-    - name: "db_host"
-      prompt: "MySQL Database Host"
-      default: "localhost"
     - name: "db_user"
       prompt: "MySQL Database Username"
       default: root
@@ -27,11 +24,10 @@
     - docker
     - role: mysql
       db_password: "{{ db_pass }}"
-    # - role: soccer
-    #   db_host: "{{ db_host }}"
-    #   db_user: "{{ db_user }}"
-    #   db_pass: "{{ db_pass }}"
-    #   sms_user: "{{ sms_user }}"
-    #   sms_pass: "{{ sms_pass ]}"
-    #   sms_from: "{{ sms_from }}"
-    #   secret_salt: "{{ secret_salt }}"
+    - role: soccer
+      db_user: "{{ db_user }}"
+      db_pass: "{{ db_pass }}"
+      sms_user: "{{ sms_user }}"
+      sms_pass: "{{ sms_pass ]}"
+      sms_from: "{{ sms_from }}"
+      secret_salt: "{{ secret_salt }}"
