@@ -20,6 +20,9 @@
       - "80:5000"
     links:
       - "mariadb:mariadb"
+    log_options:
+      max-size: 10m
+      max-file: 3
     state: started
 
 - name: open soccer ports
